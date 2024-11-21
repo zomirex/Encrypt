@@ -1,20 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Encrypt
 {
-    public static class Encrypted
+    interface Ihash
     {
-        public static int  EncodeNumber1 (string Origin , string Destination)
+        public  byte[] GetHash(string inputString);
+        public  string GetHashString(string inputString);
+    }
+    interface IEncod
+    {
+        public  int EncodeNumber1(string Origin, string Destination);
+        public  int EncodeNumber2(string Origin, string Destination);
+        public  string encoder(string FileText, int EncodeNumber);
+        
+      
+
+
+    }
+    interface IDecode
+    {
+        public string decoder(string text, int decodenumber);
+    }
+   
+    public class Encoder :   Ihash ,IEncod
+    {
+        public string Hash { get; private set; }
+        public  byte[] GetHash(string inputString)
         {
-            
+            using (HashAlgorithm algorithm = SHA256.Create())
+                return algorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString));
+        }
+        public  string GetHashString(string inputString)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in GetHash(inputString))
+                sb.Append(b.ToString("X2"));
+            Hash = sb.ToString();
+            return sb.ToString();
+        }
+        public  int EncodeNumber1(string Origin, string Destination)
+        {
+
             int EncodeNumber = 0;
             string tolower;
             tolower = Origin.ToLower();
-            for (int i = 0; i < Origin.Length ; i++)
+            for (int i = 0; i < Origin.Length; i++)
             {
                 EncodeNumber += tolower[i] - 'a';
             }
@@ -26,11 +61,13 @@ namespace Encrypt
             //EncodeNumber = EncodeNumber % 26 ;        
             return EncodeNumber;
         }
-        public static int EncodeNumber2(string Origin, string Destination)
-        {int EncodeNumber = 0,og=0 , ds =0 ;
+        public  int EncodeNumber2(string Origin, string Destination)
+        {
+            int EncodeNumber = 0, og = 0, ds = 0;
             foreach (char c in Origin)
-            {   if(char.IsLetter(c))
-                        og += c;
+            {
+                if (char.IsLetter(c))
+                    og += c;
             }
             foreach (char c in Destination)
             {
@@ -40,44 +77,47 @@ namespace Encrypt
             EncodeNumber = (og * ds) / (og + ds);
             return EncodeNumber;
         }
-
-        public static string Encoder (string FileText , int EncodeNumber)
+        public  string encoder(string FileText, int EncodeNumber)
         {
+
             EncodeNumber = EncodeNumber % 26;
-            StringBuilder EncodedFile =new StringBuilder();
-            
+            StringBuilder EncodedFile = new StringBuilder();
+
             FileText = FileText.ToLower();
-            
-            int indexencodenumber=0;
-            char x; 
-            for (int i = 0; i < FileText.Length;i++)
+
+            int indexencodenumber = 0;
+            char x;
+            for (int i = 0; i < FileText.Length; i++)
             {
-                if (char.IsLetter(FileText[i]) )
+                if (char.IsLetter(FileText[i]))
                 {
 
-                indexencodenumber = 'a'+(EncodeNumber + FileText[i] - 'a') % 26 ;
-                x = Convert.ToChar(indexencodenumber);
-                EncodedFile.Append(x);
-                //Console.WriteLine($"{indexencodenumber}    {x}   ");
+                    indexencodenumber = 'a' + (EncodeNumber + FileText[i] - 'a') % 26;
+                    x = Convert.ToChar(indexencodenumber);
+                    EncodedFile.Append(x);
+                    //Console.WriteLine($"{indexencodenumber}    {x}   ");
 
                 }
                 else
                 {
-                    x= FileText[i];
+                    x = FileText[i];
                     EncodedFile.Append(x);
                 }
-                
-                
+
+
             }
             return EncodedFile.ToString();
         }
-        public static string Decoder (string text , int decodenumber  )
+    }
+    public class Decoder : IDecode, Ihash
+    {
+        public  string decoder(string text, int decodenumber)
         {
             decodenumber = decodenumber % 26;
-            StringBuilder DecodedFile =new StringBuilder();
+            StringBuilder DecodedFile = new StringBuilder();
             char x;
             int indexdecodenumber = 0;
-            for (int i = 0; i < text.Length ; i++) 
+            for (int i = 0; i < text.Length; i++)
             {
                 if (char.IsLetter(text[i]))
                 {
@@ -95,8 +135,30 @@ namespace Encrypt
 
             return DecodedFile.ToString();
         }
-        
-            
+
+        public string Hash { get; private set; }
+
+        public byte[] GetHash(string inputString)
+        {
+            using (HashAlgorithm algorithm = SHA256.Create())
+                return algorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString));
+        }
+        public string GetHashString(string inputString)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in GetHash(inputString))
+                sb.Append(b.ToString("X2"));
+            Hash = sb.ToString();
+            return sb.ToString();
+        }
+        public bool CheckHash(string hash)
+        {
+
+            if (hash == Hash)
+                return true;
+            return false;
+        }
 
     }
+
 }

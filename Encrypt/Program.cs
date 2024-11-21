@@ -1,33 +1,41 @@
 ﻿using Encrypt;
-
-int codenumber = Encrypted.EncodeNumber1("amir", "sama");
+using System.ComponentModel.DataAnnotations;
+Encoder ne = new Encoder();
+ne.EncodeNumber1("amir", "sama");
+Decoder de = new Decoder();
+int codenumber = ne.EncodeNumber1("amir", "sama");
 string text = "salam khoobi chetori";
-string encodedtext = Encrypted.Encoder(text, codenumber);
-string path = @"C:\Users\Pcmod\Desktop\message.txt", path1 = @"C:\Users\Pcmod\Desktop\messagedecode.txt",path2 = @"C:\Users\Pcmod\Desktop\messagedecode2.ini", path4 = @"C:\Users\Pcmod\Desktop\messagede2.csv";
-//Console.WriteLine(codenumber);
-//Console.WriteLine();
-//Console.WriteLine(encodedtext);
-//Console.WriteLine(text);
+string encodedtext = ne.encoder(text, codenumber);
+string decodetext =de.decoder(encodedtext, codenumber);
 
-//Console.WriteLine();
-//Console.WriteLine();
-
-string decodedtext = Encrypted.Decoder(encodedtext, codenumber);
-//Console.WriteLine(decodedtext);
-TXTManager fileManager = new TXTManager();
-fileManager.FileWriter(path, encodedtext);
-Console.WriteLine( Encrypted.Decoder(fileManager.Filereder(path), codenumber));
-fileManager.FileWriter(path1, Encrypted.Decoder(fileManager.Filereder(path), codenumber));
+string hash = ne.GetHashString(text);
+Console.WriteLine(ne.GetHashString(text));
+Console.WriteLine(de.GetHashString(decodetext));
+Console.WriteLine(de.CheckHash(hash));
 
 
-Console.WriteLine(Encrypted.EncodeNumber1("amir", "sama")%26);
-Console.WriteLine(Encrypted.EncodeNumber2("amir", "sama")%26);
 
-INIManager iniManager = new INIManager(path2);
-iniManager.FileWriter("message1", encodedtext);
-Console.WriteLine(Encrypted.Decoder(iniManager.Filereder("message1"),15));
+string  path1 = @"C:\Users\Pcmod\Desktop\messagedecode.txt",path2 = @"C:\Users\Pcmod\Desktop\messagedecode2.ini", path3 = @"C:\Users\Pcmod\Desktop\messagede2.csv";
+TXTManager txt = new TXTManager();
+txt.FileWriter(path1, encodedtext);
+CSVManager csv = new CSVManager();
+csv.FileWriter(path3, encodedtext);
+INIManager ini = new INIManager(path2);
+ini.FileWriter("message", encodedtext);
 
-CSVManager csvManager = new CSVManager();
-csvManager.FileWriter(path4, encodedtext);
-Console.WriteLine(Encrypted.Decoder(csvManager.Filereder(path4), 20));
+Console.WriteLine(codenumber);
+Console.WriteLine("////////////////////////////////////////////////////////////");
 
+Console.WriteLine(txt.Filereder(path1));
+
+Console.WriteLine(csv.Filereder(path3));
+
+Console.WriteLine(ini.Filereder("message"));
+Console.WriteLine("////////////////////////////////////////////////////////////");
+Console.WriteLine(text );
+
+Console.WriteLine(de.decoder(txt.Filereder(path1),codenumber));
+Console.WriteLine(de.decoder(csv.Filereder(path3), codenumber+1));
+Console.WriteLine(de.decoder(ini.Filereder("message"), codenumber+3));
+
+Console.WriteLine("////////////////////////////////////////////////////////////");

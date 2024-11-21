@@ -62,7 +62,6 @@ namespace Encrypt
             return File.ReadAllText(path); 
         }
     }
-
     public class INIManager
     {
         string Path;
