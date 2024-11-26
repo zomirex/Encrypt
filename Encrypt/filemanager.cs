@@ -61,7 +61,7 @@ namespace Encrypt
             //EncodeNumber = EncodeNumber % 26 ;
             codednumber = EncodeNumber;
             return EncodeNumber;
-        }
+        }// متد اول برای 
         public int codedNumber2(string Origin, string Destination)
         {
             int EncodeNumber = 0, og = 0, ds = 0;
@@ -83,7 +83,7 @@ namespace Encrypt
             EncodeNumber = (og * ds) / (og + ds);
             codednumber = EncodeNumber;
             return EncodeNumber;
-        }
+        }// متد دوم رمزگذاری کردن 
         public string encoder(string FileText, int EncodeNumber)
         {
 
@@ -120,7 +120,7 @@ namespace Encrypt
 
             }
             return EncodedFile.ToString();
-        }
+        }// رمز گذاری کردن اون string 
         public string decoder(string text, int decodenumber)
         {
             decodenumber = decodenumber % 52;
@@ -154,7 +154,7 @@ namespace Encrypt
             }
 
             return DecodedFile.ToString();
-        }
+        } // بازکردن فایله کد شده 
     }
     public class TXTManager : FileManager
     {
@@ -173,7 +173,7 @@ namespace Encrypt
         }
         public string Filereder(string path)
         { return File.ReadAllText(path); }
-    }
+    }// برای این کلاس تو اول کار ادرس فایلو بصورت کانستراکتور بدیم 
     public class CSVManager : FileManager 
     {
         Regex r = new Regex(@"\.csv");
@@ -206,7 +206,7 @@ namespace Encrypt
                 throw new FileNotFoundException("file is not csv");
             return File.ReadAllText(path); 
         }
-    }
+    }// باید مسیر فایلو بر یار تو متد بدیم  
     public class INIManager : FileManager
     {
         string Path;
@@ -233,5 +233,5 @@ namespace Encrypt
             GetPrivateProfileString(Section ?? EXE, Key, "", RetVal, 255, Path);
             return RetVal.ToString();
         }
-    }
+    }// باید مسیر فایلو بر یار تو متد بدیم  
 }
